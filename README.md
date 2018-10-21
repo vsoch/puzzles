@@ -1,4 +1,4 @@
-# Puzzle
+# Puzzles
 
 I've recently taken up a fondness for puzzles. Over a conversation one night,
 we joked how cool it would be to have a digital puzzle. It actually
@@ -8,7 +8,9 @@ digital display that a mapped portion of an image would be shown on. Given that
 we have something like the Kindle, the technology for "long lasting and low power
 images" didn't seem that far off.
 
-![img/pieces.jpg](img/pieces.jpg)
+|--------|-----------|
+|![img/pieces.jpg](img/pieces.jpg)| ![img/background.jpg](img/background.jpg) |
+
 
 But the use of sensors is a bit out of my budget and current knowledge base. As
 I usually do, I thought of breaking the problem into smaller pieces (pun intended).
