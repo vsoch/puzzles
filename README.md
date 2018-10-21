@@ -14,10 +14,11 @@ images" didn't seem that far off.
 
 > Sometimes, you just feel out of place.
 
-But the use of sensors is a bit out of my budget and current knowledge base. As
-I usually do, I thought of breaking the problem into smaller pieces (pun intended).
-Perhaps there is a similar problem I can solve that would be a step in the right 
-direction? How about a robot that solves puzzles? 
+But the use of sensors is a bit out of my budget and current knowledge base. But
+that's okay, let's work up to that. As I usually do, I thought of breaking the 
+problem into smaller pieces (pun intended). Perhaps there is a similar problem 
+I can solve that would be a step in the right  direction? 
+How about a robot that solves puzzles? 
 
 ## High Level Algorithm
 
