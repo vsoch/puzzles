@@ -41,4 +41,11 @@ As silly as this is, there are some fun applications for a robot puzzle solver.
  - Puzzles are currently ranked on number of pieces, but I've found this isn't a good representation for how difficult they are. The robot puzzle solver could come up with a metric that represents difficulty based on the algorithm.
  - Has anyone ever wondered how much harder it is to solve a puzzle if you are color blind? Given a metric of difficulty, we can see how that changes with different variables removed. For example, if we remove color, how much longer does the algorithm take?
 
+# Puzzle Solver
 
+I want to document this process, because it's a relatively complex problem that requires
+image processing, machine learning, and lots of creativity that will feel overwhelming if not broken
+into... pieces (okay I'll stop that). The first thing I decided to do was work with some "dummy" data.
+I'm actually set up in a good position because I have a fully assembed puzzle that I can photograph, label
+with "ground truth," and then test by breaking apart and photographing the pieces in many different
+ways. But to start, I want to just try and represent a puzzle.
