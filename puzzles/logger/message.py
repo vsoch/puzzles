@@ -20,6 +20,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import os
 import sys
 from .spinner import Spinner
+from .namer import RobotNamer
 
 ABORT = -5
 CRITICAL = -4
@@ -353,4 +354,5 @@ def convert2boolean(arg):
 
 
 PuzzlesMessage.spinner = Spinner()
+PuzzlesMessage.RobotNamed = RobotNamer()
 bot = PuzzlesMessage()
