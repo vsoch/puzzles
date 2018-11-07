@@ -25,9 +25,6 @@ from puzzles.main.solver import solve_puzzle
 
 from skimage.io import imread
 
-import matplotlib
-matplotlib.use('pdf')
-
 bot.level = 3
 
 import os

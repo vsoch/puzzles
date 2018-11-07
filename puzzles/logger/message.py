@@ -1,6 +1,6 @@
 '''
 
-Copyright (C) 2018 Vanessa Sochat.
+Copyright (C) 2017-2018 Vanessa Sochat.
 
 This program is free software: you can redistribute it and/or modify it
 under the terms of the GNU Affero General Public License as published by
@@ -354,5 +354,5 @@ def convert2boolean(arg):
 
 
 PuzzlesMessage.spinner = Spinner()
-PuzzlesMessage.RobotNamed = RobotNamer()
+PuzzlesMessage.RobotNamer = RobotNamer()
 bot = PuzzlesMessage()
