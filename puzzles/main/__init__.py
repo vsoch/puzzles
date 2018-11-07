@@ -21,6 +21,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from puzzles.logger import bot
 from puzzles.utils import get_temporary_name
+from puzzles.main.solver import solve_puzzle
 
 from skimage.io import imread
 
@@ -226,3 +227,6 @@ class Puzzle(object):
             return png_file
         else:
             bot.warning('use detect() --> clean() before saving is possible.')
+
+
+Puzzle.solve = solve_puzzle

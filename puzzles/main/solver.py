@@ -23,11 +23,11 @@ import os
 import sys
 
 
-def solve_puzzle(self, images):
+def solve_puzzle(self, images=None):
     '''Solve a puzzle from a set of input images of the pieces. Specifically,
        we do the following:
 
-       - read in each valid input images
+       - read in each valid input images (self.pieces)
        - segment from the background
        - run the solver algorithm
 
@@ -37,15 +37,20 @@ def solve_puzzle(self, images):
        Parameters
        ==========
        images: a list (or single) image to segment for pieces.
+       name: a name for the puzzle (defaults to robot namer)
  
     '''
-
-    if not isinstance(images, list):
-        images = [images]
-
+    # Add images to be solved?
+    if images is not None:
+        self.load_images(images)
+       
     pieces = []
-    for image in images:
-        print('bwaaa write me!')
+    for piece in self.pieces:
+
+        # 1. segment jpgs
+        segmented = segment_jpgs(piece.image) 
+
+        # 2. 
 
     if len(pieces) == 1:
         pieces = pieces[0]
