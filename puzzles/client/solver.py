@@ -25,7 +25,7 @@ import os
 
 def main(args,parser,subparser):
     
-    from puzzles.main solver import solve_puzzle
+    from puzzles.main.solver import solve_puzzle
 
     # Here are the pictures, in a list
     if len(args.pictures) == 0:
