@@ -1,3 +1,5 @@
+.ipynb_checkpoints/
+env
 __pycache__
 *.pyc
 puzzles.egg-info/
