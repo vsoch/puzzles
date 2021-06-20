@@ -60,8 +60,10 @@ As silly as this is, there are some fun applications for a robot puzzle solver.
 
 The puzzle solver currently loads in a photo, and can shuffle it and then re-discover
 the solution. I haven't tested this on a huge number of images so your mileage may vary,
-and note that I still consider the library under development.
-Here is the basic usage, and you should also check out the [examples/avocado-puzzle.ipynb](examples/avocado-puzzle.ipynb)
+and note that I still consider the library under development. You can see a full
+notebook [here on nbviewer](https://nbviewer.jupyter.org/github/vsoch/puzzles/blob/master/examples/avocado-puzzle.ipynb)
+or keep reading to see basic usage and screen shots. The notebook file is located at [examples/avocado-puzzle.ipynb](examples/avocado-puzzle.ipynb)
+in case you want to edit it.
 
 ```python
 from puzzles.models import PhotoPuzzle
