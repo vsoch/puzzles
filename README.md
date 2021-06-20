@@ -88,6 +88,9 @@ puzzle.shuffle()
 # Now show the puzzle broken into pieces!
 puzfig = puzzle.get_puzzle_figure()
 
+# Solve the puzzle!
+puzzle.solve()
+
 solved_fig = puzzle.get_solved_figure()
 ```
 

@@ -315,6 +315,7 @@ class PhotoPuzzle:
             ax.set_ylabel(row)
             ax.axes.yaxis.set_visible(True)
             ax.axes.yaxis.set_ticks([])
+        return fig
 
     @property
     def vertical_num_pieces(self):
