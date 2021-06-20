@@ -8,9 +8,9 @@ digital display that a mapped portion of an image would be shown on. Given that
 we have something like the Kindle, the technology for "long lasting and low power
 images" didn't seem that far off.
 
-| Pieces | Puzzle    |
-|--------|-----------|
-|![img/pieces.jpg](img/pieces.jpg)| ![img/background.jpg](img/background.jpg) |
+| Pieces                          | Puzzle                                    |
+|---------------------------------|-------------------------------------------|
+|![examples/img/pieces.jpg](examples/img/pieces.jpg)| ![examples/img/background.jpg](examples/img/background.jpg) |
 
 > Sometimes, you just feel out of place.
 
@@ -22,12 +22,20 @@ How about a robot that solves puzzles?
 
 ## High Level Algorithm
 
-A "robot puzzle solver" means that we do the following:
+A "robot puzzle solver" means that we do the following
 
- 1. We take a picture of all the puzzle pieces on some consistently colored surface.
+ 1. We start with pictures of separate images
  2. The puzzle pieces are segmented.
  3. We represented features and edges of the pieces.
+ 4. Based on these features, the segmented pieces are put together by an algorithm. 
+
+But more realistically, we want to start with a simpler problem:
+
+ 1. We start with an entire image and break it into N squares
+ 2. We match sides based on colors
+ 3. We represented features and edges of the pieces.
  4. Based on these features, the segmented pieces are put together by an algorithm.
+
 
 ## Variables
 
@@ -50,9 +58,68 @@ As silly as this is, there are some fun applications for a robot puzzle solver.
 
 # Puzzle Solver
 
-I want to document this process, because it's a relatively complex problem that requires
-image processing, machine learning, and lots of creativity that will feel overwhelming if not broken
-into... pieces (okay I'll stop that). The first thing I decided to do was work with some "dummy" data.
-I'm actually set up in a good position because I have a fully assembed puzzle that I can photograph, label
-with "ground truth," and then test by breaking apart and photographing the pieces in many different
-ways. But to start, I want to just try and represent a puzzle.
+The puzzle solver currently loads in a photo, and can shuffle it and then re-discover
+the solution. I haven't tested this on a huge number of images so your mileage may vary,
+and note that I still consider the library under development.
+Here is the basic usage, and you should also check out the [examples/avocado-puzzle.ipynb](examples/avocado-puzzle.ipynb)
+
+```python
+from puzzles.main.models import PhotoPuzzle
+
+puzzle = PhotoPuzzle("avocado-halves.jpeg")
+
+# Show the original image
+fig = puzzle.get_image_figure()
+
+# Metrics about the puzzle calculated based on minimum piece size we requested
+
+puzzle.metrics()
+# Image file         : avocado-halves.jpeg
+# Minimum piece size : 30
+# Width              : 640
+# Height             : 360
+# Number pieces      : 252
+
+# Shuffle the puzzle and show it (TODO, show in place first)
+puzzle.shuffle()
+
+# Now show the puzzle broken into pieces!
+puzfig = puzzle.get_puzzle_figure()
+
+solved_fig = puzzle.get_solved_figure()
+```
+
+Here is the shuffled puzzle:
+
+![examples/shuffled-puzzle.png](examples/shuffled-puzzle.png)
+
+And then solved!
+
+![examples/solved-puzzle.png](examples/solved-puzzle.png)
+
+In practice I've found that the original shuffle can lead to a different result
+(e.g., a slightly not perfect solution).
+
+## Changes
+
+In case you want to contribute here are some ideas!
+
+### Puzzle Pieces
+
+I'd like there to be a model of a `PuzzlePiece` that holds the piece data, and then comparisons 
+between pieces are done in this manner. Right now we have a `PlacedPiece` which really just
+holds an index into the array self.pieces and a location (x,y) in terms of coordinates
+on the board. It would be cleaner to somehow combine these two.
+
+### Image Loading
+
+Currently, if we display the image before shuffle it actually isn't perfect.
+But I think it should be (and this is a bug) we would want to be able to
+display the image, see that it's correct, and then shuffle.
+
+
+### Display Functions
+
+Currently we have redundant logic in the functions to show the puzzle pieces
+in their current array, and then the solved solution. This should be
+refactored into a shared display function.

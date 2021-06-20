@@ -1,4 +1,4 @@
-'''
+"""
 
 Copyright (C) 2018 Vanessa Sochat.
 
@@ -15,7 +15,7 @@ License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-'''
+"""
 
 from puzzles.logger import bot
 import os
@@ -23,20 +23,19 @@ import sys
 
 
 def segment_jpgs(self, images):
-    ''' Segment a jpg image from a background.
- 
-       Parameters
-       ==========
-       images: a list (or single) image to segment for pieces.
- 
-    '''
+    """Segment a jpg image from a background.
+
+    Parameters
+    ==========
+    images: a list (or single) image to segment for pieces.
+    """
 
     if not isinstance(images, list):
         images = [images]
 
     pieces = []
     for image in images:
-        print('bwaaa segment me!')
+        print("bwaaa segment me!")
 
     if len(pieces) == 1:
         pieces = pieces[0]

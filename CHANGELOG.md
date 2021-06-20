@@ -14,6 +14,6 @@ and **Merged pull requests**. Critical items to know are:
 The versions coincide with releases on pip. Only major versions will be released as tags on Github.
 
 ## [0.0.x](https://github.com/vsoch/puzzles/tree/master) (0.0.x)
- - addition of development documentation  (0.0.x)
+ - refactor to have PhotoPuzzle model (object) (0.0.11)
  - addition of CHANGELOG, logger, issue templates, etc.
  - initial release of package shell (no intelligent code)  (0.0.1)
