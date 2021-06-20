@@ -81,6 +81,7 @@ if __name__ == "__main__":
           license=LICENSE,
           description=DESCRIPTION,
           long_description=LONG_DESCRIPTION,
+          long_description_content_type="text/markdown",
           keywords=KEYWORDS,
           install_requires = INSTALL_REQUIRES,
           classifiers=[
@@ -93,5 +94,4 @@ if __name__ == "__main__":
               'Topic :: Scientific/Engineering',
               'Operating System :: Unix',
               'Programming Language :: Python :: 3',
-          ],
-          entry_points = {'console_scripts': [ 'puzzles=puzzles.solver:main' ] })
+          ])
