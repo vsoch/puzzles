@@ -64,7 +64,7 @@ and note that I still consider the library under development.
 Here is the basic usage, and you should also check out the [examples/avocado-puzzle.ipynb](examples/avocado-puzzle.ipynb)
 
 ```python
-from puzzles.main.models import PhotoPuzzle
+from puzzles.models import PhotoPuzzle
 
 puzzle = PhotoPuzzle("avocado-halves.jpeg")
 
