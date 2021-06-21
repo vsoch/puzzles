@@ -63,13 +63,13 @@ class PhotoPuzzle:
         """
         Given a loaded puzzle image, generate some number of pieces.
         """
-        for i in range(self.vertical_num_pieces):
-            for j in range(self.horizontal_num_pieces):
+        for i in range(self.horizontal_num_pieces):
+            for j in range(self.vertical_num_pieces):
                 # Split into pieces with dimensions x, y, and color
                 self.pieces.append(
                     self.image[
-                        i * self.piece_height : (i + 1) * self.piece_height,
-                        j * self.piece_width : (j + 1) * self.piece_width,
+                        j * self.piece_height : (j + 1) * self.piece_height,
+                        i * self.piece_width : (i + 1) * self.piece_width,
                         :,
                     ]
                 )
@@ -266,44 +266,17 @@ class PhotoPuzzle:
             for (x, y), index in self.covered_places.items()
         }
 
-    def get_puzzle_figure(self, title=None, show=True):
+    def plot_puzzle(self, n_rows, n_cols, plot_piece):
         """
-        Show the current state of the puzzle
+        Shared function to plot puzzle
         """
-        fig, axs = plt.subplots(self.vertical_num_pieces, self.horizontal_num_pieces)
-        fig.set_figheight(self.vertical_num_pieces)
-        fig.set_figwidth(self.horizontal_num_pieces)
-        for x in range(self.horizontal_num_pieces):
-            for y in range(self.vertical_num_pieces):
-                ax = axs[y, x]
-                ax.imshow(self.pieces[y + x * self.vertical_num_pieces])
-                ax.xaxis.set_visible(False)
-                ax.axes.yaxis.set_visible(False)
-
-        # Set numbered columns and rows
-        for col, ax in enumerate(axs[0]):
-            ax.set_title(col)
-
-        for row, ax in enumerate(axs[:, 0]):
-            ax.set_ylabel(row)
-            ax.axes.yaxis.set_visible(True)
-            ax.axes.yaxis.set_ticks([])
-
-    def get_solved_figure(self):
-        """
-        Get figure for solved puzzle
-        """
-        n_rows = max([loc[1] for loc in self.covered_places]) + 1
-        n_cols = max([loc[0] for loc in self.covered_places]) + 1
         fig, axs = plt.subplots(n_rows, n_cols)
         fig.set_figheight(n_rows)
         fig.set_figwidth(n_cols)
 
         for y, ax_row in enumerate(axs):
             for x, ax in enumerate(ax_row):
-                if (x, y) in self.covered_places:
-                    piece_index = self.covered_places[(x, y)]
-                    ax.imshow(self.pieces[piece_index])
+                plot_piece(ax, x, y)
                 ax = axs[y, x]
                 ax.xaxis.set_visible(False)
                 ax.axes.yaxis.set_visible(False)
@@ -316,6 +289,39 @@ class PhotoPuzzle:
             ax.axes.yaxis.set_visible(True)
             ax.axes.yaxis.set_ticks([])
         return fig
+
+    def get_puzzle_figure(self):
+        """
+        Show the current state of the puzzle.
+
+        This function plots self.pieces, not the puzzle solution.
+        """
+
+        def plot_piece(ax, x, y):
+            ax.imshow(self.pieces[y + x * self.vertical_num_pieces])
+
+        return self.plot_puzzle(
+            self.vertical_num_pieces, self.horizontal_num_pieces, plot_piece
+        )
+
+    def get_solved_figure(self):
+        """
+        Get figure for solved puzzle
+        """
+        n_rows = max([loc[1] for loc in self.covered_places]) + 1
+        n_cols = max([loc[0] for loc in self.covered_places]) + 1
+
+        # The solved figure has a different function to plot the piece
+        def plot_covered_piece(ax, x, y):
+            if (x, y) in self.covered_places:
+                piece_index = self.covered_places[(x, y)]
+                ax.imshow(self.pieces[piece_index])
+
+        return self.plot_puzzle(
+            n_rows=max([loc[1] for loc in self.covered_places]) + 1,
+            n_cols=max([loc[0] for loc in self.covered_places]) + 1,
+            plot_piece=plot_covered_piece,
+        )
 
     @property
     def vertical_num_pieces(self):

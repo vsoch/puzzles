@@ -82,7 +82,10 @@ puzzle.metrics()
 # Height             : 360
 # Number pieces      : 252
 
-# Shuffle the puzzle and show it (TODO, show in place first)
+# Plot the original pieces
+fig = puzzle.get_puzzle_figure()
+
+# Shuffle the puzzle and show it
 puzzle.shuffle()
 
 # Now show the puzzle broken into pieces!
@@ -121,10 +124,3 @@ on the board. It would be cleaner to somehow combine these two.
 Currently, if we display the image before shuffle it actually isn't perfect.
 But I think it should be (and this is a bug) we would want to be able to
 display the image, see that it's correct, and then shuffle.
-
-
-### Display Functions
-
-Currently we have redundant logic in the functions to show the puzzle pieces
-in their current array, and then the solved solution. This should be
-refactored into a shared display function.
