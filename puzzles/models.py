@@ -279,15 +279,17 @@ class PhotoPuzzle:
             chosen_piece = self.pieces[new_index]
             self.add_piece(chosen_piece)
 
-        self.reset_covered_indices()
+        # Update set of pieces
+        new_pieces = []
 
-    def reset_covered_indices(self):
-        x_min = min([loc[0] for loc in self.covered_places])
-        y_min = min([loc[1] for loc in self.covered_places])
-        self.covered_places = {
-            (x - x_min, y - y_min): index
-            for (x, y), index in self.covered_places.items()
-        }
+        # Sort new covered places by index
+        self.covered_places =  {k: v for k, v in sorted(self.covered_places.items(), key=lambda item: item[1])}
+        for loc, idx in self.covered_places.items():
+            piece = self.pieces[idx]
+            piece.loc = loc
+            new_pieces.append(piece)
+        self.pieces = new_pieces
+        
 
     def plot(self):
         """
