@@ -85,7 +85,7 @@ puzzle.metrics()
 # Plot the original pieces
 fig = puzzle.get_puzzle_figure()
 
-# Shuffle the puzzle and show it (TODO, show in place first)
+# Shuffle the puzzle and show it
 puzzle.shuffle()
 
 # Now show the puzzle broken into pieces!
