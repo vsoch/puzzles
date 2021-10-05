@@ -14,6 +14,7 @@ and **Merged pull requests**. Critical items to know are:
 The versions coincide with releases on pip. Only major versions will be released as tags on Github.
 
 ## [0.0.x](https://github.com/vsoch/puzzles/tree/master) (0.0.x)
+ - adding support to parse from pieces (0.0.14)
  - creating one shared plotting function (0.0.13)
  - make sure to return solved figure at end (0.0.12)
  - refactor to have PhotoPuzzle model (object) (0.0.11)
