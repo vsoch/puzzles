@@ -32,7 +32,7 @@ class PlacedPiece:
         return self.__str__()
 
 
-class PhotoPuzzle:
+class PuzzleBase:
     def __init__(self, image, max_rgb=255, min_piece_size=30, font=None):
         """
         Generate a puzzle from a photo and solve it.
@@ -56,65 +56,12 @@ class PhotoPuzzle:
         self.piece_distances = {}
 
         self.pieces = []
-        self.load_image(image)
-        self.generate_pieces()
-
-    def generate_pieces(self):
-        """
-        Given a loaded puzzle image, generate some number of pieces.
-        """
-        for i in range(self.horizontal_num_pieces):
-            for j in range(self.vertical_num_pieces):
-                # Split into pieces with dimensions x, y, and color
-                self.pieces.append(
-                    self.image[
-                        j * self.piece_height : (j + 1) * self.piece_height,
-                        i * self.piece_width : (i + 1) * self.piece_width,
-                        :,
-                    ]
-                )
 
     def __exit__(self):
         """
         Close plots on instance destruction
         """
         plt.close()
-
-    def metrics(self):
-        """
-        Print metrics about the puzzle, calculated based on min piece size.
-        """
-        logger.info("Image file         : %s" % self.filename)
-        logger.info("Minimum piece size : %s" % self.min_piece_size)
-        logger.info("Width              : %s" % self.width)
-        logger.info("Height             : %s" % self.height)
-        logger.info("Number pieces      : %s" % self.count_pieces())
-
-    def load_image(self, image):
-        """
-        Load the image to turn into a puzzle.
-        """
-        if not os.path.exists(image):
-            logger.exit("%s does not exist." % image)
-        self.image_file = image
-        self.filename = os.path.basename(image)
-        self.image = mpimg.imread(image)
-        self.height, self.width = self.image.shape[0:2]
-
-    def get_image_figure(self, title=None, show=True):
-        """
-        Get a plot of the entire image.
-        """
-        # TODO what's th eright way to close tis?
-        fig = plt.figure(figsize=(self.vertical_num_pieces, self.horizontal_num_pieces))
-        plt.imshow(self.image, cmap=self.cmap)
-
-        # If we have a title, add it
-        if title:
-            plt.title(title, fontdict=self.font)
-        if show:
-            plt.show()
-        return plt
 
     def shuffle(self):
         """
@@ -290,20 +237,6 @@ class PhotoPuzzle:
             ax.axes.yaxis.set_ticks([])
         return fig
 
-    def get_puzzle_figure(self):
-        """
-        Show the current state of the puzzle.
-
-        This function plots self.pieces, not the puzzle solution.
-        """
-
-        def plot_piece(ax, x, y):
-            ax.imshow(self.pieces[y + x * self.vertical_num_pieces])
-
-        return self.plot_puzzle(
-            self.vertical_num_pieces, self.horizontal_num_pieces, plot_piece
-        )
-
     def get_solved_figure(self):
         """
         Get figure for solved puzzle
@@ -322,14 +255,6 @@ class PhotoPuzzle:
             n_cols=max([loc[0] for loc in self.covered_places]) + 1,
             plot_piece=plot_covered_piece,
         )
-
-    @property
-    def vertical_num_pieces(self):
-        return self.height // self.min_piece_size
-
-    @property
-    def horizontal_num_pieces(self):
-        return self.width // self.min_piece_size
 
     @property
     def piece_height(self):
@@ -354,9 +279,6 @@ class PhotoPuzzle:
     def __repr__(self):
         return self.__str__()
 
-    def __str__(self):
-        return "[puzzle][%s:[%s]" % (self.filename, self.count_pieces())
-
     def save_png(self, output_folder=None, image_type="cleaned", title=None):
         """save an original or cleaned dicom as png to disk.
         Default image_format is "cleaned" and can be set
@@ -373,3 +295,161 @@ class PhotoPuzzle:
             return png_file
         else:
             bot.warning("use detect() --> clean() before saving is possible.")
+
+
+class PhotoPuzzle(PuzzleBase):
+    def __init__(self, image, max_rgb=255, min_piece_size=30, font=None):
+        super().__init__(image, max_rgb, min_piece_size, font)
+        self.load_image(image)
+        self.generate_pieces()
+
+    def get_puzzle_figure(self):
+        """
+        Show the current state of the puzzle.
+
+        This function plots self.pieces, not the puzzle solution.
+        """
+
+        def plot_piece(ax, x, y):
+            ax.imshow(self.pieces[y + x * self.vertical_num_pieces])
+
+        return self.plot_puzzle(
+            self.vertical_num_pieces, self.horizontal_num_pieces, plot_piece
+        )
+
+    @property
+    def vertical_num_pieces(self):
+        return self.height // self.min_piece_size
+
+    @property
+    def horizontal_num_pieces(self):
+        return self.width // self.min_piece_size
+
+    def load_image(self, image):
+        """
+        Load the image to turn into a puzzle.
+        """
+        if not os.path.exists(image):
+            logger.exit("%s does not exist." % image)
+        self.image_file = image
+        self.filename = os.path.basename(image)
+        self.image = mpimg.imread(image)
+        self.height, self.width = self.image.shape[0:2]
+
+    def __str__(self):
+        return "[puzzle][%s:[%s]" % (self.filename, self.count_pieces())
+
+    def metrics(self):
+        """
+        Print metrics about the puzzle, calculated based on min piece size.
+        """
+        logger.info("Image file         : %s" % self.filename)
+        logger.info("Minimum piece size : %s" % self.min_piece_size)
+        logger.info("Width              : %s" % self.width)
+        logger.info("Height             : %s" % self.height)
+        logger.info("Number pieces      : %s" % self.count_pieces())
+
+    def generate_pieces(self):
+        """
+        Given a loaded puzzle image, generate some number of pieces.
+        """
+        for i in range(self.horizontal_num_pieces):
+            for j in range(self.vertical_num_pieces):
+                # Split into pieces with dimensions x, y, and color
+                self.pieces.append(
+                    self.image[
+                        j * self.piece_height : (j + 1) * self.piece_height,
+                        i * self.piece_width : (i + 1) * self.piece_width,
+                        :,
+                    ]
+                )
+
+    def get_image_figure(self, title=None, show=True):
+        """
+        Get a plot of the entire image.
+        """
+        fig = plt.figure(figsize=(self.vertical_num_pieces, self.horizontal_num_pieces))
+        plt.imshow(self.image, cmap=self.cmap)
+
+        # If we have a title, add it
+        if title:
+            plt.title(title, fontdict=self.font)
+        if show:
+            plt.show()
+        return plt
+
+
+class PiecesPuzzle(PuzzleBase):
+    def __init__(
+        self, images, height, width, max_rgb=255, min_piece_size=30, font=None
+    ):
+        super().__init__(images, max_rgb, min_piece_size, font)
+        self.load_images(images)
+        self._height = height
+        self._width = width
+
+    def __str__(self):
+        return "[puzzle][%s pieces]" % self.count_pieces()
+
+    # We cannot know this, so it's a max space to put pieces on
+    @property
+    def vertical_num_pieces(self):
+        return self._height
+
+    @property
+    def horizontal_num_pieces(self):
+        return self._width
+
+    def get_puzzle_figure(self):
+        """
+        Show the current state of the puzzle.
+
+        This function plots self.pieces, not the puzzle solution.
+        """
+
+        def plot_piece(ax, x, y):
+            idx = y + x * self.vertical_num_pieces
+            if len(self.pieces) - 1 < idx:
+                return
+            ax.imshow(self.pieces[y + x * self.vertical_num_pieces])
+
+        return self.plot_puzzle(
+            self.vertical_num_pieces, self.horizontal_num_pieces, plot_piece
+        )
+
+    def metrics(self):
+        """
+        Print metrics about the puzzle, calculated based on min piece size.
+        """
+        logger.info("Minimum piece size : %s" % self.min_piece_size)
+        logger.info("Width              : %s" % self.width)
+        logger.info("Height             : %s" % self.height)
+        logger.info("Number pieces      : %s" % self.count_pieces())
+
+    def load_images(self, images):
+        """
+        Load images of pieces to turn into a puzzle.
+        """
+
+        # widths and heights must be consistent
+        width = None
+        height = None
+        for image in images:
+            if not os.path.exists(image):
+                logger.exit("%s does not exist." % image)
+            self.image_file = image
+            new = mpimg.imread(image)
+
+            if height and new.shape[1] != height:
+                sys.exit(
+                    "Heights of pieces do not match! %s vs. %s" % (height, new.shape[1])
+                )
+            height = new.shape[1]
+
+            if width and new.shape[0] != width:
+                sys.exit(
+                    "Widths of pieces do not match! %s vs. %s" % (width, new.shape[0])
+                )
+            width = new.shape[0]
+            self.pieces.append(new)
+            self.height, self.width = height, width
