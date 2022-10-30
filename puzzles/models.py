@@ -253,6 +253,7 @@ class PhotoPuzzle:
         # Add remaining pieces to the puzzle
         while unused_pieces_indices:
 
+            print("%s unused pieces..." % len(unused_pieces_indices), end="\r")
             # Create a matching score based
             scores = self.make_scores(unused_pieces_indices)
             new_index, new_loc = min(scores, key=scores.get)
@@ -311,6 +312,9 @@ class PhotoPuzzle:
         """
         Get figure for solved puzzle
         """
+        if not self.covered_places:
+            self.solve()
+
         n_rows = max([loc[1] for loc in self.covered_places]) + 1
         n_cols = max([loc[0] for loc in self.covered_places]) + 1
 
