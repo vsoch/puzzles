@@ -15,6 +15,9 @@ import matplotlib.image as mpimg
 import os
 import sys
 
+# Small value to add to input of log function to avoid taking the log of zero.
+EPS = 1e-5
+
 
 class PlacedPiece:
     def __init__(self, index, loc):
@@ -202,7 +205,7 @@ class PhotoPuzzle:
         if edge1.shape != edge2.shape:
             return np.inf
         edge_diff = edge1 - edge2[::-1]
-        return np.log(la.norm(np.minimum(edge_diff, self.max_rgb - edge_diff), ord=1))
+        return np.log(EPS + la.norm(np.minimum(edge_diff, self.max_rgb - edge_diff), ord=1))
 
     def find_score(self, new_piece, neighbor_piece):
         """
