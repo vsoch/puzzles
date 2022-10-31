@@ -5,10 +5,8 @@ __license__ = "MPL 2.0"
 import fnmatch
 import json
 import os
-import re
 import tempfile
-from collections import OrderedDict
-import sys
+import shutil
 
 
 def get_installdir():
