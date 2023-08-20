@@ -3,18 +3,15 @@ __copyright__ = "Copyright 2017-2021, Vanessa Sochat"
 __license__ = "MPL 2.0"
 
 from puzzles.logger import logger
-from puzzles.utils import get_temporary_name
 
 import collections
 import numpy as np
 from numpy import linalg as la
 
 import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
+from PIL import Image
 
 import os
-import sys
-
 
 class PlacedPiece:
     def __init__(self, index, loc):
@@ -98,15 +95,15 @@ class PhotoPuzzle:
             logger.exit("%s does not exist." % image)
         self.image_file = image
         self.filename = os.path.basename(image)
-        self.image = mpimg.imread(image)
+        self.image = np.asarray(Image.open(image))
         self.height, self.width = self.image.shape[0:2]
 
     def get_image_figure(self, title=None, show=True):
         """
         Get a plot of the entire image.
         """
-        # TODO what's th eright way to close tis?
-        fig = plt.figure(figsize=(self.vertical_num_pieces, self.horizontal_num_pieces))
+        # TODO what's the right way to close this?
+        plt.figure(figsize=(self.vertical_num_pieces, self.horizontal_num_pieces))
         plt.imshow(self.image, cmap=self.cmap)
 
         # If we have a title, add it
@@ -163,7 +160,7 @@ class PhotoPuzzle:
                         )
                         for neighbor_piece in placed_neighbors
                     ]
-                )
+                ) / np.sqrt(len(placed_neighbors))
         return scores
 
     def get_piece_distance(self, p1, e1, p2, e2):
@@ -201,8 +198,19 @@ class PhotoPuzzle:
         """
         if edge1.shape != edge2.shape:
             return np.inf
+        # One edge is clockwise, the other is counter-clockwise
         edge_diff = edge1 - edge2[::-1]
-        return np.log(la.norm(np.minimum(edge_diff, self.max_rgb - edge_diff), ord=1))
+        # Take the minimum for the diff since values are unsigned ints.
+        edge_diff_norm = 1 + la.norm(
+            np.minimum(edge_diff, self.max_rgb - edge_diff), ord=2
+        )
+        # Normalize by variances
+        var_norm = 1e-20 + np.power(
+            la.norm(np.var(edge1, axis=0), ord=2)
+            * la.norm(np.var(edge2, axis=0), ord=2),
+            0.25,
+        )
+        return edge_diff_norm / var_norm
 
     def find_score(self, new_piece, neighbor_piece):
         """
@@ -250,9 +258,11 @@ class PhotoPuzzle:
         # Add remaining pieces to the puzzle
         while unused_pieces_indices:
 
+            print("%s unused pieces..." % len(unused_pieces_indices), end="\r")
             # Create a matching score based
             scores = self.make_scores(unused_pieces_indices)
             new_index, new_loc = min(scores, key=scores.get)
+
             unused_pieces_indices.remove(new_index)
             self.add_piece(PlacedPiece(index=new_index, loc=new_loc))
 
@@ -308,8 +318,8 @@ class PhotoPuzzle:
         """
         Get figure for solved puzzle
         """
-        n_rows = max([loc[1] for loc in self.covered_places]) + 1
-        n_cols = max([loc[0] for loc in self.covered_places]) + 1
+        if not self.covered_places:
+            self.solve()
 
         # The solved figure has a different function to plot the piece
         def plot_covered_piece(ax, x, y):
@@ -363,13 +373,10 @@ class PhotoPuzzle:
         to "original." If the image was already clean (not
         flagged) the cleaned image is just a copy of original
         """
-        from matplotlib import pyplot as plt
-
         if hasattr(self, image_type):
             png_file = self._get_clean_name(output_folder, "png")
-            plt = self.get_figure(image_type=image_type, title=title)
-            plt.savefig(png_file)
-            plt.close()
+            fig = self.get_figure(image_type=image_type, title=title)
+            fig.savefig(png_file)
+            fig.close()
             return png_file
-        else:
-            bot.warning("use detect() --> clean() before saving is possible.")
+        logger.warning("use detect() --> clean() before saving is possible.")
